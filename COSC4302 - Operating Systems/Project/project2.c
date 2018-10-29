@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
     char *commandLine;
     char **pathv;
     struct command_t command;
-    /* ... */
+    
     /* Shell initialization */
     /* ... */
     
