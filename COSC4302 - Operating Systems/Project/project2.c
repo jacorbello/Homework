@@ -25,7 +25,7 @@ int main() {
         printPrompt();
 
         /* Read the command line and parse it */
-        readCOmmand(commandLine);
+        readCommand(commandLine);
         /* ... */
         parseCommand(commandLine, &command);
         /* ... */
@@ -46,4 +46,12 @@ int main() {
 
     /* Shell termination */
     /* ... */
+}
+
+void readCommand(char *commandLine) {
+    fgets(commandLine, LINE_LEN, stdin);
+}
+
+int parseCommand(char *commandLine, struct command_t *command) {
+    
 }
