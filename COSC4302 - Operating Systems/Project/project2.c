@@ -13,15 +13,18 @@ int parsePath(char **);
 void printPrompt();
 void readCommand(char *);
 
-int main() {
-
+int main(int argc, char *argv[]) { 
+    int pid = fork();
+    char *commandLine;
+    char **pathv;
+    struct command_t command;
     /* ... */
     /* Shell initialization */
     /* ... */
     
     parsePath(pathv); /* Get directory paths from PATH */
 
-    while(TRUE) {
+    while(1) {
         printPrompt();
 
         /* Read the command line and parse it */
@@ -33,19 +36,34 @@ int main() {
         /* Get the full pathname for the file */
         command.name = lookupPath(command.argv, pathv);
         if(command.name == NULL) {
-            /* Report error */
+            printf("ERROR: Path not found");/* Report error */
             continue;
         }
 
         /* Create child and execute the command */
-        /* ... */
+        //added fork stuff below stopping at exit(0)
+        if(pid < 0){
+            printf("ERROR: fork error");
+        }
+        else if (pid == 0){
+            /*child process*/
+            execv(command.name, command.argv);
 
-        /* Wait for the child to terminate */
-        /* ... */
+        }
+        else{
+            /*parent process*/
+            /* Wait for the child to terminate */
+            wait(0);
+            
+        }
+
+        
+        
     }
 
     /* Shell termination */
-    /* ... */
+    exit(0);
+    
 }
 
 void readCommand(char *commandLine) {
@@ -53,5 +71,8 @@ void readCommand(char *commandLine) {
 }
 
 int parseCommand(char *commandLine, struct command_t *command) {
-    
+   
+   //check page 63
+   
+   return 0; 
 }
