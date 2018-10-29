@@ -76,3 +76,13 @@ int parseCommand(char *commandLine, struct command_t *command) {
    
    return 0; 
 }
+
+int parsePath(char *pathv[]) {
+    /* Parse the PATH */
+}
+
+void printPrompt() {
+    char prompt[MAX_PATH_LEN];
+    getcwd(prompt, MAX_PATH_LEN);
+    printf("%s: ", prompt);
+}
