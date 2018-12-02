@@ -92,7 +92,6 @@ int parseCommand(char *commandLine, struct command_t *command)
 
 int parsePath(char *pathv[])
 {
-    char *pathENV;
     char *path;
     int i;
 
