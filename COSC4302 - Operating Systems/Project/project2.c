@@ -90,9 +90,6 @@ int parsePath(char *pathv[]) {
 }
 
 void printPrompt() {
-    /* ensuring prompt is working before continuing */
-    printf("Testing the prompt");
-    /* completed testing */
     char prompt[MAX_PATH_LEN];
     getcwd(prompt, MAX_PATH_LEN);
     printf("%s: ", prompt);
