@@ -71,10 +71,18 @@ void readCommand(char *commandLine) {
 }
 
 int parseCommand(char *commandLine, struct command_t *command) {
-   
-   //check page 63
-   
-   return 0; 
+   int argc = 0;
+   char **commandLinePtr;
+
+   commandLinePtr = &commandLine;
+   command->argv[argc] = (char *)malloc(MAX_ARG_LEN);
+
+   do {
+       command->argv[++argc] = (char *)malloc(MAX_ARG_LEN);
+   } while (command->argv[argc] = strsep(commandLinePtr, WHITESPACE) != NULL);
+
+   strcpy((char *)malloc(sizeof(command->argv[0])), command->argv[0]);
+   return 1; 
 }
 
 int parsePath(char *pathv[]) {
