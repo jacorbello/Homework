@@ -110,11 +110,12 @@ int parsePath(char *pathv[])
         return 0;
     }
 
-    //char const* pathENV = getenv("PATH");
-    //path = (char *)malloc(strlen(pathENV + 1));
-    //strcpy(path, pathENV);
-    /* split the PATH up into tokens (see http://www.tutorialspoint.com/c_standard_library/c_function_strtok.htm) */
-    //char *token = strtok(path, ":");
+    /*
+    char const* pathENV = getenv("PATH");
+    path = (char *)malloc(strlen(pathENV + 1));
+    strcpy(path, pathENV);
+    /* split the PATH up into tokens (see http://www.tutorialspoint.com/c_standard_library/c_function_strtok.htm) *
+    char *token = strtok(path, ":");
     int count = 0;
     while (token != NULL)
     {
@@ -122,6 +123,7 @@ int parsePath(char *pathv[])
         token = strtok(NULL, ":");
         count++;
     }
+    */
     return 1;
 }
 
