@@ -136,7 +136,6 @@ char *getPath(char **argv, char *dir[])
 {
     char *result;
     char pathName[MAX_PATH_LEN];
-    int i;
 
     if (*argv[0] == '/')
     {
