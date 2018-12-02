@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
     char **pathv;
     struct command_t command;
 
+    printf("Welcome to the Shell");
     /* Shell initialization */
     /* ... */
 
@@ -39,7 +40,7 @@ int main(int argc, char *argv[])
         command.name = getPath(command.argv, pathv);
         if (command.name == NULL)
         {
-            printf("ERROR: Path not found"); /* Report error */
+            printf("ERROR: Path does not exist"); /* Report error */
             continue;
         }
 
@@ -47,7 +48,7 @@ int main(int argc, char *argv[])
         /* added fork stuff below stopping at exit(0) */
         if (pid < 0)
         {
-            printf("ERROR: fork error");
+            printf("ERROR: Fork does not exist");
         }
         else if (pid == 0)
         {
@@ -147,9 +148,11 @@ char *getPath(char **argv, char *dir[])
         }
     }
 
-    int count,i = 0;
-    do {
-        if (dir[count] == NULL) {
+    int count, i = 0;
+    do
+    {
+        if (dir[count] == NULL)
+        {
             i = -1;
             break;
         }
@@ -157,8 +160,9 @@ char *getPath(char **argv, char *dir[])
         strcat(pathName, "/");
         strcat(pathName, argv[0]);
 
-        if (access(pathName, X_OK) == 0) {
-            result = (char *)malloc(strlen(pathName)+1);
+        if (access(pathName, X_OK) == 0)
+        {
+            result = (char *)malloc(strlen(pathName) + 1);
             strcpy(result, pathName);
             return result;
         }
