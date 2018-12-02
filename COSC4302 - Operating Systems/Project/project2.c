@@ -92,6 +92,7 @@ int parseCommand(char *commandLine, struct command_t *command)
 
 int parsePath(char *pathv[])
 {
+    char *pathENV;
     char *path;
     int i;
 
@@ -108,6 +109,17 @@ int parsePath(char *pathv[])
     if (pathv[i - 1] == NULL)
     {
         return 0;
+    }
+
+    pathENV = (char *) getenv("PATH");
+    path = (char *) malloc(strlen(pathENV) + 1);
+    strcpy(path, pathENV);
+    char *token = strtok(path, ":");
+    int pathNum = 0;
+    while (token != NULL) {
+        strcpy(pathv[pathNum], token);
+        token = strtok(NULL, ":");
+        pathNum++;
     }
 
     /*
