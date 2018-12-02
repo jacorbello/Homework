@@ -110,7 +110,7 @@ int parsePath(char *pathv[])
         return 0;
     }
 
-    char* pathENV = getenv("PATH");
+    char const* pathENV = getenv("PATH");
     path = (char *)malloc(strlen(pathENV + 1));
     strcpy(path, pathENV);
     /* split the PATH up into tokens (see http://www.tutorialspoint.com/c_standard_library/c_function_strtok.htm) */
