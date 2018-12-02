@@ -79,10 +79,10 @@ int parseCommand(char *commandLine, struct command_t *command)
     commandLinePtr = &commandLine;
     command->argv[argc] = (char *)malloc(MAX_ARG_LEN);
 
-    do
+    while (command->argv[argc] = strsep(commandLinePtr, WHITESPACE) != NULL)
     {
         command->argv[++argc] = (char *)malloc(MAX_ARG_LEN);
-    } while (command->argv[argc] = strsep(commandLinePtr, WHITESPACE) != NULL);
+    }
     command->name = (char *)malloc(sizeof(command->argv[0]));
     strcpy(command->name, command->argv[0]);
     return 1;
