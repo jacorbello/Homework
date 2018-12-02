@@ -129,7 +129,7 @@ void printPrompt()
 {
     char prompt[MAX_PATH_LEN];
     getcwd(prompt, MAX_PATH_LEN);
-    printf("%s: ", prompt);
+    printf("%s: \n", prompt);
 }
 
 char *getPath(char **argv, char *dir[])
