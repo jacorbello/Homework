@@ -7,11 +7,11 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-char *lookupPath(char **, char **);
+char *getPath(char **, char **);
 int parseCommand(char *, struct command_t *);
 int parsePath(char **);
 void printPrompt();
-void readCommand(char *);
+void getCommand(char *);
 
 int main(int argc, char *argv[])
 {
@@ -30,13 +30,13 @@ int main(int argc, char *argv[])
         printPrompt();
 
         /* Read the command line and parse it */
-        readCommand(commandLine);
+        getCommand(commandLine);
         /* ... */
         parseCommand(commandLine, &command);
         /* ... */
 
         /* Get the full pathname for the file */
-        command.name = lookupPath(command.argv, pathv);
+        command.name = getPath(command.argv, pathv);
         if (command.name == NULL)
         {
             printf("ERROR: Path not found"); /* Report error */
@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
     exit(0);
 }
 
-void readCommand(char *commandLine)
+void getCommand(char *commandLine)
 {
     fgets(commandLine, LINE_LEN, stdin);
 }
@@ -132,7 +132,7 @@ void printPrompt()
     printf("%s: ", prompt);
 }
 
-char *lookupPath(char **argv, char *dir[])
+char *getPath(char **argv, char *dir[])
 {
     char *result;
     char pathName[MAX_PATH_LEN];
@@ -148,5 +148,23 @@ char *lookupPath(char **argv, char *dir[])
         }
     }
 
-    /* TODO: finish looking in the remaining paths for commands */
+    int count,i = 0;
+    do {
+        if (dir[count] == NULL) {
+            i = -1;
+            break;
+        }
+        strcpy(pathName, dir[count]);
+        strcat(pathName, "/");
+        strcat(pathName, argv[0]);
+
+        if (access(pathName, X_OK) == 0) {
+            result = (char *)malloc(strlen(pathName)+1);
+            strcpy(result, pathName);
+            return result;
+        }
+    } while (i != -1);
+
+    fprintf(stderr, "Cannot find command: %s", argv[0]);
+    return NULL;
 }
