@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
         }
 
         /* Create child and execute the command */
-        //added fork stuff below stopping at exit(0)
+        /* added fork stuff below stopping at exit(0) */
         if (pid < 0)
         {
             printf("ERROR: fork error");
@@ -79,6 +79,7 @@ int parseCommand(char *commandLine, struct command_t *command)
     commandLinePtr = &commandLine;
     command->argv[argc] = (char *)malloc(MAX_ARG_LEN);
 
+    /* TODO: fix the integer to pointer declaration in the while(...=...) */
     while (command->argv[argc] = strsep(commandLinePtr, WHITESPACE) != NULL)
     {
         command->argv[++argc] = (char *)malloc(MAX_ARG_LEN);
@@ -133,4 +134,19 @@ void printPrompt()
 
 char *lookupPath(char **argv, char *dir[])
 {
+    char *result;
+    char pathName[MAX_PATH_LEN];
+    int i;
+
+    if (*argv[0] == '/')
+    {
+        /* verify we can access the path (see https://www.gnu.org/software/libc/manual/html_node/Testing-File-Access.html) */
+        if (access(argv[0], X_OK) == 0)
+        {
+            strcpy(result, argv[0]);
+            return result;
+        }
+    }
+
+    /* TODO: finish looking in the remaining paths for commands */
 }
