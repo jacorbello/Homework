@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-            /*parent process*/
+            /* parent process */
             /* Wait for the child to terminate */
             wait(0);
         }
@@ -90,7 +90,38 @@ int parseCommand(char *commandLine, struct command_t *command)
 
 int parsePath(char *pathv[])
 {
-    /* Parse the PATH */
+    char *pathENV;
+    char *path;
+    int i;
+
+    if (pathv == NULL)
+    {
+        return 0;
+    }
+
+    for (i = 0; i < MAX_PATHS; i++)
+    {
+        pathv[i] = malloc(MAX_PATH_LEN * sizeof(char));
+    }
+
+    if (pathv[i - 1] == NULL)
+    {
+        return 0;
+    }
+
+    pathENV = (char *)getenv("PATH");
+    path = (char *)malloc(strlen(pathENV + 1));
+    strcpy(path, pathENV);
+    /* split the PATH up into tokens (see http://www.tutorialspoint.com/c_standard_library/c_function_strtok.htm) */
+    char *token = strtok(path, ":");
+    int count = 0;
+    while (token != NULL)
+    {
+        strcpy(pathv[count], token);
+        token = strtok(NULL, ":");
+        count++;
+    }
+    return 1;
 }
 
 void printPrompt()
