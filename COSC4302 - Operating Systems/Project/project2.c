@@ -86,3 +86,7 @@ void printPrompt() {
     getcwd(prompt, MAX_PATH_LEN);
     printf("%s: ", prompt);
 }
+
+char *lookupPath(char **argv, char *dir[]) {
+
+}
