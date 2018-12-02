@@ -13,18 +13,20 @@ int parsePath(char **);
 void printPrompt();
 void readCommand(char *);
 
-int main(int argc, char *argv[]) { 
+int main(int argc, char *argv[])
+{
     int pid = fork();
     char *commandLine;
     char **pathv;
     struct command_t command;
-    
+
     /* Shell initialization */
     /* ... */
-    
+
     parsePath(pathv); /* Get directory paths from PATH */
 
-    while(1) {
+    while (1)
+    {
         printPrompt();
 
         /* Read the command line and parse it */
@@ -35,66 +37,69 @@ int main(int argc, char *argv[]) {
 
         /* Get the full pathname for the file */
         command.name = lookupPath(command.argv, pathv);
-        if(command.name == NULL) {
-            printf("ERROR: Path not found");/* Report error */
+        if (command.name == NULL)
+        {
+            printf("ERROR: Path not found"); /* Report error */
             continue;
         }
 
         /* Create child and execute the command */
         //added fork stuff below stopping at exit(0)
-        if(pid < 0){
+        if (pid < 0)
+        {
             printf("ERROR: fork error");
         }
-        else if (pid == 0){
+        else if (pid == 0)
+        {
             /*child process*/
             execv(command.name, command.argv);
-
         }
-        else{
+        else
+        {
             /*parent process*/
             /* Wait for the child to terminate */
             wait(0);
-            
         }
-
-        
-        
     }
 
     /* Shell termination */
     exit(0);
-    
 }
 
-void readCommand(char *commandLine) {
+void readCommand(char *commandLine)
+{
     fgets(commandLine, LINE_LEN, stdin);
 }
 
-int parseCommand(char *commandLine, struct command_t *command) {
-   int argc = 0;
-   char **commandLinePtr;
+int parseCommand(char *commandLine, struct command_t *command)
+{
+    int argc = 0;
+    char **commandLinePtr;
 
-   commandLinePtr = &commandLine;
-   command->argv[argc] = (char *)malloc(MAX_ARG_LEN);
+    commandLinePtr = &commandLine;
+    command->argv[argc] = (char *)malloc(MAX_ARG_LEN);
 
-   do {
-       command->argv[++argc] = (char *)malloc(MAX_ARG_LEN);
-   } while (command->argv[argc] = strsep(commandLinePtr, WHITESPACE) != NULL);
-
-   strcpy((char *)malloc(sizeof(command->argv[0])), command->argv[0]);
-   return 1; 
+    do
+    {
+        command->argv[++argc] = (char *)malloc(MAX_ARG_LEN);
+    } while (command->argv[argc] = strsep(commandLinePtr, WHITESPACE) != NULL);
+    command->name = (char *)malloc(sizeof(command->argv[0]));
+    strcpy(command->name, command->argv[0]);
+    return 1;
 }
 
-int parsePath(char *pathv[]) {
+int parsePath(char *pathv[])
+{
     /* Parse the PATH */
 }
 
-void printPrompt() {
+void printPrompt()
+{
     char prompt[MAX_PATH_LEN];
     getcwd(prompt, MAX_PATH_LEN);
     printf("%s: ", prompt);
 }
 
-char *lookupPath(char **argv, char *dir[]) {
-
+char *lookupPath(char **argv, char *dir[])
+{
 }
