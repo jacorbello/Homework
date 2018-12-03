@@ -6,11 +6,9 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <errno.h>
-#define PATH_DELIMITERS ":"
 
 char *getPath(char **, char **);
-int parseCommand(const char *, const char, char **);
+int parseCommand(char *, struct command_t *);
 int parsePath(char **);
 void printPrompt();
 void getCommand(char *);
@@ -20,8 +18,11 @@ int main(int argc, char *argv[], char *envp[])
     int pid = fork();
     char *commandLine;
     char **pathv;
-    char **command;
+    struct command_t command;
+
+    printf("Welcome to the Shell\n");
     /* Shell initialization */
+    /* ... */
     parsePath(pathv); /* Get directory paths from PATH */
     while (1)
     {
@@ -29,7 +30,17 @@ int main(int argc, char *argv[], char *envp[])
 
         /* Read the command line and parse it */
         getCommand(commandLine);
-        parseCommand(commandLine, PATH_DELIMITERS, &command);
+        /* ... */
+        parseCommand(commandLine, &command);
+        /* ... */
+
+        /* Get the full pathname for the file */
+        command.name = getPath(command.argv, pathv);
+        if (command.name == NULL)
+        {
+            printf("ERROR: Path does not exist\n"); /* Report error */
+            continue;
+        }
 
         /* Create child and execute the command */
         /* added fork stuff below stopping at exit(0) */
@@ -40,7 +51,7 @@ int main(int argc, char *argv[], char *envp[])
         else if (pid == 0)
         {
             /*child process*/
-            execv(pathv, command);
+            execv(command.name, command.argv);
         }
         else
         {
@@ -59,56 +70,22 @@ void getCommand(char *commandLine)
     fgets(commandLine, LINE_LEN, stdin);
 }
 
-int parseCommand(const char *s, const char delimiters, char **argvp)
+int parseCommand(char *commandLine, struct command_t *command)
 {
+    int argc = 0;
+    char **commandLinePtr;
 
-    int error;
-    int i;
-    int numtokens;
-    const char *snew;
-    char *t;
+    commandLinePtr = &commandLine;
+    command->argv[argc] = (char *)malloc(MAX_ARG_LEN);
 
-    if ((s == NULL) || (delimiters == NULL) || (argvp == NULL))
+    /* TODO: fix the integer to pointer declaration in the while(...=...) */
+    while (command->argv[argc] = strsep(commandLinePtr, WHITESPACE) != NULL)
     {
-        errno = EINVAL;
-        return -1;
+        command->argv[++argc] = (char *)malloc(MAX_ARG_LEN);
     }
-    argvp = NULL;
-
-    snew = s + strspn(s, delimiters);
-    if ((t = malloc(strlen(snew) + 1)) == NULL)
-    {
-        return -1;
-    }
-    strcpy(t, snew);
-    numtokens = 0;
-    if (strtok(t, delimiters) != NULL)
-    {
-        for (numtokens = 1; strtok(NULL, delimiters) != NULL; numtokens++)
-            ;
-    }
-    if ((argvp = malloc((numtokens + 1) * sizeof(char *))) == NULL)
-    {
-        error = errno;
-        free(t);
-        errno = error;
-        return -1;
-    }
-    if (numtokens == 0)
-    {
-        free(t);
-    }
-    else
-    {
-        strcpy(t, snew);
-        **argvp = strtok(t, delimiters);
-        for (i = 1; i < numtokens; i++)
-        {
-            *((argvp) + i) = strtok(NULL, delimiters);
-        }
-    }
-    *((argvp) + numtokens) = NULL;
-    return numtokens;
+    command->name = (char *)malloc(sizeof(command->argv[0]));
+    strcpy(command->name, command->argv[0]);
+    return 1;
 }
 
 int parsePath(char *pathv[])
@@ -133,6 +110,7 @@ int parsePath(char *pathv[])
         return 0;
     }
 
+    //strcpy(path, pPath);
     /* split the PATH up into tokens (see http://www.tutorialspoint.com/c_standard_library/c_function_strtok.htm) */
     char *token = strtok(pPath, ":");
     int count = 0;
