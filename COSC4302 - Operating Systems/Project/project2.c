@@ -29,17 +29,7 @@ int main(int argc, char *argv[], char * envp[])
 
         /* Read the command line and parse it */
         getCommand(commandLine);
-        /* ... */
         parseCommand(commandLine, PATH_DELIMITERS, &command);
-        /* ... */
-
-//        /* Get the full pathname for the file */
-//       command.name = getPath(command.argv, pathv);
-//        if (command.name == NULL)
-//        {
-//            printf("ERROR: Path does not exist\n"); /* Report error */
-//            continue;
-//        }
 
         /* Create child and execute the command */
         /* added fork stuff below stopping at exit(0) */
