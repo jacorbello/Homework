@@ -20,7 +20,7 @@ int main(int argc, char *argv[], char * envp[])
     int pid = fork();
     char *commandLine;
     char **pathv;
-    struct command_t command;
+    char **command;
 
     printf("Welcome to the Shell\n");
     /* Shell initialization */
@@ -36,13 +36,13 @@ int main(int argc, char *argv[], char * envp[])
         parseCommand(commandLine, PATH_DELIMITERS, &command);
         /* ... */
 
-        /* Get the full pathname for the file */
-        command.name = getPath(command.argv, pathv);
-        if (command.name == NULL)
-        {
-            printf("ERROR: Path does not exist\n"); /* Report error */
-            continue;
-        }
+//        /* Get the full pathname for the file */
+//       command.name = getPath(command.argv, pathv);
+//        if (command.name == NULL)
+//        {
+//            printf("ERROR: Path does not exist\n"); /* Report error */
+//            continue;
+//        }
 
         /* Create child and execute the command */
         /* added fork stuff below stopping at exit(0) */
@@ -53,7 +53,7 @@ int main(int argc, char *argv[], char * envp[])
         else if (pid == 0)
         {
             /*child process*/
-            execv(command.name, command.argv);
+            execv(pathv, command);
         }
         else
         {
