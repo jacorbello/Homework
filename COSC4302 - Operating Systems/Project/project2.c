@@ -10,7 +10,7 @@
 #define PATH_DELIMITERS ":"
 
 char *getPath(char **, char **);
-int parseCommand(const char *, const char, char **);
+int parseCommand(const char *, const char , char **);
 int parsePath(char **);
 void printPrompt();
 void getCommand(char *);
@@ -21,10 +21,7 @@ int main(int argc, char *argv[], char * envp[])
     char *commandLine;
     char **pathv;
     char **command;
-
-    printf("Welcome to the Shell\n");
     /* Shell initialization */
-    /* ... */
     parsePath(pathv); /* Get directory paths from PATH */
     while (1)
     {
@@ -71,8 +68,6 @@ void getCommand(char *commandLine)
 {
     fgets(commandLine, LINE_LEN, stdin);
 }
-
-
 
 int parseCommand(const char *s, const char delimiters, char **argvp){
 
@@ -139,8 +134,6 @@ int parsePath(char *pathv[])
         return 0;
     }
 
-
-    //strcpy(path, pPath);
     /* split the PATH up into tokens (see http://www.tutorialspoint.com/c_standard_library/c_function_strtok.htm) */
     char *token = strtok(pPath, ":");
     int count = 0;
