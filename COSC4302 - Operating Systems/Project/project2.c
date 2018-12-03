@@ -79,7 +79,7 @@ int parseCommand(char *commandLine, struct command_t *command)
     command->argv[argc] = (char *)malloc(MAX_ARG_LEN);
 
     /* TODO: fix the integer to pointer declaration in the while(...=...) */
-    while (command->argv[argc] = strsep(commandLinePtr, WHITESPACE) != NULL)
+    while ((command->argv[argc] = strsep(commandLinePtr, WHITESPACE)) != NULL)
     {
         command->argv[++argc] = (char *)malloc(MAX_ARG_LEN);
     }
