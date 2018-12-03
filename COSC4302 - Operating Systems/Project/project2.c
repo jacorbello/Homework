@@ -14,18 +14,20 @@ void printPrompt();
 void getCommand(char *);
 char *returnPathVariable(int argc, char *argv[], char * envp[]);
 
-int main(int argc, char *argv[])
+int main(int argc, char *argv[], char * envp[])
 {
     int pid = fork();
     char *commandLine;
     char **pathv;
     struct command_t command;
+    char *pathVariable;
 
     printf("Welcome to the Shell\n");
     /* Shell initialization */
     /* ... */
     parsePath(pathv); /* Get directory paths from PATH */
-
+    pathVariable = returnPathVariable(argc, *argv, *envp);
+    printf("TESTING: %s\n", pathVariable);
     while (1)
     {
         printPrompt();
