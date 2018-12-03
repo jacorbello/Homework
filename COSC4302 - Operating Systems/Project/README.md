@@ -1,2 +1,11 @@
-Use project2.c, as it's the shell which includes the sections that we need to update along with comments.
-Initially copied from the Lab 2.1 code skeleton.
+# Introduction
+This is a shell implementation, written in C, used to interpret command line input from a user and execute.
+
+## Running the program
+On a linux machine:
+- Copy the files to a single directory
+- Compile the program
+    - ```gcc -o program project.c minishell.h```
+- Run the program
+    - ```./program```
+

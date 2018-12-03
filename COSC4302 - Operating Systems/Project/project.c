@@ -1,4 +1,3 @@
-
 #include "minishell.h"
 #include <stdio.h>
 #include <string.h>
@@ -8,7 +7,65 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-void readCommand(char *commandLine)
+char *getPath(char **, char **);
+int parseCommand(char *, struct command_t *);
+int parsePath(char **);
+void printPrompt();
+void getCommand(char *);
+
+int main(int argc, char *argv[], char *envp[])
+{
+    int pid = fork();
+    char *commandLine;
+    char **pathv;
+    struct command_t command;
+
+    printf("Welcome to the Shell\n");
+    /* Shell initialization */
+    /* ... */
+    parsePath(pathv); /* Get directory paths from PATH */
+    while (1)
+    {
+        printPrompt();
+
+        /* Read the command line and parse it */
+        getCommand(commandLine);
+        /* ... */
+        parseCommand(commandLine, &command);
+        /* ... */
+
+        /* Get the full pathname for the file */
+        command.name = getPath(command.argv, pathv);
+        if (command.name == NULL)
+        {
+            printf("ERROR: Path does not exist\n"); /* Report error */
+            continue;
+        }
+
+        /* Create child and execute the command */
+        /* added fork stuff below stopping at exit(0) */
+        if (pid < 0)
+        {
+            printf("ERROR: Fork does not exist\n");
+        }
+        else if (pid == 0)
+        {
+            /*child process*/
+            execv(command.name, command.argv);
+        }
+        else
+        {
+            /* parent process */
+            /* Wait for the child to terminate */
+            wait(0);
+        }
+    }
+
+    /* Shell termination */
+    exit(0);
+}
+
+void getCommand(char *commandLine)
 {
     fgets(commandLine, LINE_LEN, stdin);
 }
@@ -21,34 +78,45 @@ int parseCommand(char *commandLine, struct command_t *command)
     commandLinePtr = &commandLine;
     command->argv[argc] = (char *)malloc(MAX_ARG_LEN);
 
+    /* TODO: fix the integer to pointer declaration in the while(...=...) */
     while ((command->argv[argc] = strsep(commandLinePtr, WHITESPACE)) != NULL)
     {
-        command->argv[argc] = (char *)malloc(MAX_ARG_LEN);
+        command->argv[++argc] = (char *)malloc(MAX_ARG_LEN);
     }
     command->name = (char *)malloc(sizeof(command->argv[0]));
     strcpy(command->name, command->argv[0]);
     return 1;
 }
 
-int parsePath(char *dirs[])
+int parsePath(char *pathv[])
 {
-    char *pathEnvVar;
-    int i;
     char *path;
+    int i;
+    char *pPath;
+    pPath = getenv("PATH");
 
-    for (i = 0; i < MAX_ARGS; i++)
+    if (pathv == NULL)
     {
-        dirs[i] = NULL;
+        return 0;
     }
-    pathEnvVar = (char *)getenv("PATH");
-    strcpy(path, pathEnvVar);
 
+    for (i = 0; i < MAX_PATHS; i++)
+    {
+        pathv[i] = malloc(MAX_PATH_LEN * sizeof(char));
+    }
+
+    if (pathv[i - 1] == NULL)
+    {
+        return 0;
+    }
+
+    //strcpy(path, pPath);
     /* split the PATH up into tokens (see http://www.tutorialspoint.com/c_standard_library/c_function_strtok.htm) */
-    char *token = strtok(path, ":");
+    char *token = strtok(pPath, ":");
     int count = 0;
     while (token != NULL)
     {
-        strcpy(dirs[count], token);
+        strcpy(pathv[count], token);
         token = strtok(NULL, ":");
         count++;
     }
@@ -62,7 +130,7 @@ void printPrompt()
     printf("%s: \n", prompt);
 }
 
-char *getPath(char **argv, char **dir)
+char *getPath(char **argv, char *dir[])
 {
     char *result;
     char pathName[MAX_PATH_LEN];
@@ -99,58 +167,4 @@ char *getPath(char **argv, char **dir)
 
     fprintf(stderr, "Cannot find command: %s\n", argv[0]);
     return NULL;
-}
-int main(int argc, char *argv[], char *envp[])
-{
-    char *commandLine;
-    char **pathv = malloc(sizeof(char *) * MAX_PATHS);
-    struct command_t command;
-    int pid = fork();
-
-    /* Shell initialization */
-    /* ... */
-    parsePath(pathv); /* Get directory paths from PATH */
-    while (1)
-    {
-        printPrompt();
-
-        /* Read the command line and parse it */
-        readCommand(commandLine);
-        /* ... */
-        parseCommand(commandLine, &command);
-        /* ... */
-        command.argv[command.argc] = NULL;
-        /* Get the full pathname for the file */
-        command.name = getPath(command.argv, pathv);
-        if (command.name == NULL)
-        {
-            printf("ERROR: Path does not exist\n"); /* Report error */
-
-            continue;
-        }
-
-        /* Create child and execute the command */
-        /* added fork stuff below stopping at exit(0) */
-
-        if (pid < 0)
-        {
-            printf("ERROR: Fork does not exist\n");
-        }
-        else if (pid == 0)
-        {
-            /*child process*/
-            execv(command.name, command.argv);
-
-            exit(0);
-        }
-        else
-        {
-            /* parent process */
-            /* Wait for the child to terminate */
-            wait(0);
-        }
-    }
-
-    /* Shell termination */
-    exit(0);
 }
