@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <errno.h>
+#define PATH_DELIMITERS ":"
 
 char *getPath(char **, char **);
 int parseCommand(const char *, const char, char **);
@@ -32,7 +33,7 @@ int main(int argc, char *argv[], char * envp[])
         /* Read the command line and parse it */
         getCommand(commandLine);
         /* ... */
-        parseCommand(commandLine, &command);
+        parseCommand(commandLine, PATH_DELIMITERS, &command);
         /* ... */
 
         /* Get the full pathname for the file */
