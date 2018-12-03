@@ -19,10 +19,8 @@ int main(int argc, char *argv[], char * envp[])
     char *commandLine;
     char **pathv;
     struct command_t command;
-    char *pathVariable;
 
     printf("Welcome to the Shell\n");
-    printf("TESTING: %s\n", getenv("PATH"));
     /* Shell initialization */
     /* ... */
     parsePath(pathv); /* Get directory paths from PATH */
@@ -92,9 +90,10 @@ int parseCommand(char *commandLine, struct command_t *command)
 
 int parsePath(char *pathv[])
 {
-    char *pathENV;
     char *path;
     int i;
+    char* pPath;
+    pPath = getenv("PATH");
 
     if (pathv == NULL)
     {
@@ -112,12 +111,9 @@ int parsePath(char *pathv[])
     }
 
 
-    /*
-    char const* pathENV = getenv("PATH");
-    path = (char *)malloc(strlen(pathENV + 1));
-    strcpy(path, pathENV);
-    /* split the PATH up into tokens (see http://www.tutorialspoint.com/c_standard_library/c_function_strtok.htm) *
-    char *token = strtok(path, ":");
+    //strcpy(path, pPath);
+    /* split the PATH up into tokens (see http://www.tutorialspoint.com/c_standard_library/c_function_strtok.htm) */
+    char *token = strtok(pPath, ":");
     int count = 0;
     while (token != NULL)
     {
@@ -125,7 +121,6 @@ int parsePath(char *pathv[])
         token = strtok(NULL, ":");
         count++;
     }
-    */
     return 1;
 }
 
