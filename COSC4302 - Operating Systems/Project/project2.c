@@ -22,11 +22,10 @@ int main(int argc, char *argv[], char * envp[])
     char *pathVariable;
 
     printf("Welcome to the Shell\n");
-    printf("%s\n", getenv("PATH"));
+    printf("TESTING: %s\n", getenv("PATH"));
     /* Shell initialization */
     /* ... */
     parsePath(pathv); /* Get directory paths from PATH */
-    printf("TESTING: %s\n", pathVariable);
     while (1)
     {
         printPrompt();
