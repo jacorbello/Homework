@@ -10,12 +10,12 @@
 #define PATH_DELIMITERS ":"
 
 char *getPath(char **, char **);
-int parseCommand(const char *, const char , char **);
+int parseCommand(const char *, const char, char **);
 int parsePath(char **);
 void printPrompt();
 void getCommand(char *);
 
-int main(int argc, char *argv[], char * envp[])
+int main(int argc, char *argv[], char *envp[])
 {
     int pid = fork();
     char *commandLine;
@@ -59,7 +59,8 @@ void getCommand(char *commandLine)
     fgets(commandLine, LINE_LEN, stdin);
 }
 
-int parseCommand(const char *s, const char delimiters, char **argvp){
+int parseCommand(const char *s, const char delimiters, char **argvp)
+{
 
     int error;
     int i;
@@ -67,38 +68,46 @@ int parseCommand(const char *s, const char delimiters, char **argvp){
     const char *snew;
     char *t;
 
-    if ((s == NULL) || (delimiters == NULL) || (argvp == NULL)){
+    if ((s == NULL) || (delimiters == NULL) || (argvp == NULL))
+    {
         errno = EINVAL;
         return -1;
     }
     argvp = NULL;
 
-    snew = s + strspn(s,delimiters);
-    if ((t=malloc(strlen(snew)+1))==NULL){
+    snew = s + strspn(s, delimiters);
+    if ((t = malloc(strlen(snew) + 1)) == NULL)
+    {
         return -1;
     }
     strcpy(t, snew);
-    numtokens =0;
-    if(strtok(t, delimiters) != NULL){
-        for(numtokens =1; strtok(NULL, delimiters) != NULL; numtokens++);
+    numtokens = 0;
+    if (strtok(t, delimiters) != NULL)
+    {
+        for (numtokens = 1; strtok(NULL, delimiters) != NULL; numtokens++)
+            ;
     }
-    if((argvp = malloc((numtokens + 1)*sizeof(char *))) == NULL){
+    if ((argvp = malloc((numtokens + 1) * sizeof(char *))) == NULL)
+    {
         error = errno;
         free(t);
         errno = error;
         return -1;
     }
-    if(numtokens == 0){
+    if (numtokens == 0)
+    {
         free(t);
     }
-    else{
+    else
+    {
         strcpy(t, snew);
         **argvp = strtok(t, delimiters);
-        for(i=1; i<numtokens; i++){
-            *((argvp)+i) = strtok(NULL, delimiters);
+        for (i = 1; i < numtokens; i++)
+        {
+            *((argvp) + i) = strtok(NULL, delimiters);
         }
     }
-    *((argvp)+numtokens) = NULL;
+    *((argvp) + numtokens) = NULL;
     return numtokens;
 }
 
@@ -106,7 +115,7 @@ int parsePath(char *pathv[])
 {
     char *path;
     int i;
-    char* pPath;
+    char *pPath;
     pPath = getenv("PATH");
 
     if (pathv == NULL)
@@ -135,7 +144,6 @@ int parsePath(char *pathv[])
     }
     return 1;
 }
-
 
 void printPrompt()
 {

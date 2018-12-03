@@ -8,10 +8,6 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-
-
-
-
 void readCommand(char *commandLine)
 {
     fgets(commandLine, LINE_LEN, stdin);
@@ -25,9 +21,6 @@ int parseCommand(char *commandLine, struct command_t *command)
     commandLinePtr = &commandLine;
     command->argv[argc] = (char *)malloc(MAX_ARG_LEN);
 
-    
-
-    
     while ((command->argv[argc] = strsep(commandLinePtr, WHITESPACE)) != NULL)
     {
         command->argv[argc] = (char *)malloc(MAX_ARG_LEN);
@@ -46,13 +39,10 @@ int parsePath(char *dirs[])
     for (i = 0; i < MAX_ARGS; i++)
     {
         dirs[i] = NULL;
-        
     }
-    pathEnvVar = (char *) getenv("PATH");
-    strcpy(path,pathEnvVar);
+    pathEnvVar = (char *)getenv("PATH");
+    strcpy(path, pathEnvVar);
 
-
-    
     /* split the PATH up into tokens (see http://www.tutorialspoint.com/c_standard_library/c_function_strtok.htm) */
     char *token = strtok(path, ":");
     int count = 0;
@@ -64,7 +54,6 @@ int parsePath(char *dirs[])
     }
     return 1;
 }
-
 
 void printPrompt()
 {
@@ -111,13 +100,13 @@ char *getPath(char **argv, char **dir)
     fprintf(stderr, "Cannot find command: %s\n", argv[0]);
     return NULL;
 }
-int main(int argc, char *argv[], char * envp[])
+int main(int argc, char *argv[], char *envp[])
 {
     char *commandLine;
-    char **pathv = malloc(sizeof(char*)*MAX_PATHS);
+    char **pathv = malloc(sizeof(char *) * MAX_PATHS);
     struct command_t command;
     int pid = fork();
-    
+
     /* Shell initialization */
     /* ... */
     parsePath(pathv); /* Get directory paths from PATH */
@@ -136,13 +125,13 @@ int main(int argc, char *argv[], char * envp[])
         if (command.name == NULL)
         {
             printf("ERROR: Path does not exist\n"); /* Report error */
-            
+
             continue;
         }
 
         /* Create child and execute the command */
         /* added fork stuff below stopping at exit(0) */
-        
+
         if (pid < 0)
         {
             printf("ERROR: Fork does not exist\n");
@@ -159,11 +148,9 @@ int main(int argc, char *argv[], char * envp[])
             /* parent process */
             /* Wait for the child to terminate */
             wait(0);
-            
         }
     }
 
     /* Shell termination */
     exit(0);
 }
-

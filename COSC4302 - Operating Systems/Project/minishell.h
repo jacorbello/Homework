@@ -9,10 +9,10 @@
 #define NULL ...
 #endif
 
-struct command_t {
+struct command_t
+{
 
-char *name;
-int argc;
-char *argv[MAX_ARGS];
-
+    char *name;
+    int argc;
+    char *argv[MAX_ARGS];
 };
