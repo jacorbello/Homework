@@ -24,9 +24,6 @@ int main(int argc, char *argv[])
     printf("Welcome to the Shell\n");
     /* Shell initialization */
     /* ... */
-    printf("PATH : %s\n", getenv("PATH"));
-    printf("HOME : %s\n", getenv("HOME"));
-    printf("ROOT : %s\n", getenv("ROOT"));
     parsePath(pathv); /* Get directory paths from PATH */
 
     while (1)
