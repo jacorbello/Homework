@@ -12,6 +12,7 @@ int parseCommand(char *, struct command_t *);
 int parsePath(char **);
 void printPrompt();
 void getCommand(char *);
+char *returnPathVariable(int argc, char *argv[], char * envp[]);
 
 int main(int argc, char *argv[])
 {
@@ -130,6 +131,16 @@ int parsePath(char *pathv[])
     */
     return 1;
 }
+
+char *returnPathVariable(int argc, char *argv[], char * envp[]) {
+        int i;
+        for (i = 0; envp[i] != NULL; i++) {
+                if (strncmp("PATH", envp[i], 4) == 0)
+                        printf("%s\n", envp[i]);
+        }
+        return 0;
+}
+
 
 void printPrompt()
 {
